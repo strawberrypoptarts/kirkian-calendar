@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirkian Calendar - Tests</title>
+    <style>
+        body { font-family: monospace; padding: 2rem; max-width: 900px; margin: 0 auto; }
+        h1 { margin-bottom: 1rem; }
+        .test-group { margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 6px; }
+        .test-group h2 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .pass { color: #16a34a; }
+        .fail { color: #dc2626; }
+        .test { padding: 0.25rem 0; font-size: 0.85rem; }
+        .summary { margin-top: 1.5rem; padding: 1rem; font-size: 1.1rem; font-weight: bold; border-radius: 6px; }
+        .summary.all-pass { background: #dcfce7; color: #16a34a; }
+        .summary.has-fail { background: #fef2f2; color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>Kirkian Calendar - Test Suite</h1>
+    <div id="results"></div>
+    <script src="js/calendar.js"></script>
+    <script src="js/events.js"></script>
+    <script>
+    (function() {
+        var C = KirkianCalendar;
+        var results = [];
+        var total = 0;
+        var passed = 0;
+        var failed = 0;
+
+        function assert(desc, actual, expected) {
+            total++;
+            var pass = JSON.stringify(actual) === JSON.stringify(expected);
+            if (pass) passed++; else failed++;
+            results.push({ desc: desc, actual: actual, expected: expected, pass: pass });
+        }
+
+        function assertBool(desc, val) {
+            total++;
+            if (val) passed++; else failed++;
+            results.push({ desc: desc, actual: val ? 'true' : 'false', expected: 'true', pass: val });
+        }
+
+        // Epoch tests
+        (function() {
+            var group = 'Epoch Date';
+            var g = C.gregorianToKirkian(2025, 9, 10);
+            assert(group + ': Sep 10 2025 = 0 AK Kirkfall 1', [g.year, g.month, g.day], [0, 0, 0]);
+
+            g = C.gregorianToKirkian(2025, 9, 11);
+            assert(group + ': Sep 11 2025 = 0 AK Kirkfall 2', [g.year, g.month, g.day], [0, 0, 1]);
+
+            g = C.gregorianToKirkian(2025, 9, 9);
+            assertBool(group + ': Sep 9 2025 is before epoch (negative days)', C.gregorianToTotalDays(2025, 9, 9) < 0);
+        })();
+
+        // Month boundaries
+        (function() {
+            var group = 'Month Boundaries';
+
+            // 0 AK month boundaries (non-leap year)
+            check(2025, 10, 15, [0, 0, 36], group, ': Oct 15 2025 = Kirkfall 36');
+            check(2025, 10, 16, [0, 1, 1], group, ': Oct 16 2025 = Kirktember 1');
+            check(2025, 11, 20, [0, 1, 36], group, ': Nov 20 2025 = Kirktember 36');
+            check(2025, 11, 21, [0, 2, 1], group, ': Nov 21 2025 = Kirkvember 1');
+            check(2025, 12, 26, [0, 2, 36], group, ': Dec 26 2025 = Kirkvember 36');
+            check(2025, 12, 27, [0, 3, 1], group, ': Dec 27 2025 = Kirkember 1');
+            check(2026, 1, 31, [0, 3, 36], group, ': Jan 31 2026 = Kirkember 36');
+            check(2026, 2, 1, [0, 4, 1], group, ': Feb 1 2026 = July 1');
+            check(2026, 3, 8, [0, 4, 36], group, ': Mar 8 2026 = July 36');
+            check(2026, 3, 9, [0, 5, 1], group, ': Mar 9 2026 = Kirkian 1');
+            check(2026, 4, 13, [0, 5, 36], group, ': Apr 13 2026 = Kirkian 36');
+            check(2026, 4, 14, [0, 6, 1], group, ': Apr 14 2026 = Kirkward 1');
+            check(2026, 5, 19, [0, 6, 36], group, ': May 19 2026 = Kirkward 36');
+            check(2026, 5, 20, [0, 7, 1], group, ': May 20 2026 = Kirkday 1');
+            check(2026, 6, 24, [0, 7, 36], group, ': Jun 24 2026 = Kirkday 36');
+            check(2026, 6, 25, [0, 8, 1], group, ': Jun 25 2026 = Kirkstar 1');
+            check(2026, 7, 30, [0, 8, 36], group, ': Jul 30 2026 = Kirkstar 36');
+            check(2026, 7, 31, [0, 9, 1], group, ': Jul 31 2026 = iQuarters 1');
+            check(2026, 9, 9, [0, 9, 41], group, ': Sep 9 2026 = iQuarters 41');
+        })();
+
+        function check(year, month, day, expected, group, desc) {
+            var g = C.gregorianToKirkian(year, month, day);
+            assert(group + desc, [g.year, g.month, g.day], expected);
+        }
+
+        // Year boundary
+        (function() {
+            var group = 'Year Boundary';
+
+            // Sep 10, 2026 = 1 AK Kirkfall 1
+            var g = C.gregorianToKirkian(2026, 9, 10);
+            assert(group + ': Sep 10 2026 = 1 AK Kirkfall 1', [g.year, g.month, g.day], [1, 0, 1]);
+
+            // Sep 10, 2027 = 2 AK Kirkfall 1
+            g = C.gregorianToKirkian(2027, 9, 10);
+            assert(group + ': Sep 10 2027 = 2 AK Kirkfall 1', [g.year, g.month, g.day], [2, 0, 1]);
+
+            // Sep 10, 2028 = 3 AK Kirkfall 1 (leap year anchor preserved)
+            g = C.gregorianToKirkian(2028, 9, 10);
+            assert(group + ': Sep 10 2028 = 3 AK Kirkfall 1', [g.year, g.month, g.day], [3, 0, 1]);
+
+            // Sep 9, 2027 = 1 AK iQuarters 41
+            g = C.gregorianToKirkian(2027, 9, 9);
+            assert(group + ': Sep 9 2027 = 1 AK iQuarters 41', [g.year, g.month, g.day], [1, 9, 41]);
+        })();
+
+        // Leap year tests
+        (function() {
+            var group = 'Leap Year';
+
+            assertBool(group + ': 2024 is leap year', C.isLeapYear(2024));
+            assertBool(group + ': 2025 is NOT leap year', !C.isLeapYear(2025));
+            assertBool(group + ': 2026 is NOT leap year', !C.isLeapYear(2026));
+            assertBool(group + ': 2028 is leap year', C.isLeapYear(2028));
+            assertBool(group + ': 2100 is NOT leap year', !C.isLeapYear(2100));
+            assertBool(group + ': 2000 IS leap year', C.isLeapYear(2000));
+
+            // Feb 29, 2028 falls within 2 AK (Sep 10 2027 - Sep 9 2028)
+            // 2 AK should have 366 days because it contains Feb 29 2028
+            var days = C.getDaysInKirkianYear(2);
+            assert(group + ': 2 AK has 366 days (contains Feb 29 2028)', days, 366);
+
+            // In a leap year iQuarters is extended to 42 days (no separate year days)
+            var iq = C.getDaysInKirkianMonth(2, 9);
+            assert(group + ': iQuarters has 42 days in leap year 2 AK', iq, 42);
+            iq = C.getDaysInKirkianMonth(0, 9);
+            assert(group + ': iQuarters has 41 days in year 0 AK', iq, 41);
+
+            // Feb 29 2028 should convert correctly into 2 AK
+            var g = C.gregorianToKirkian(2028, 2, 29);
+            assertBool(group + ': Feb 29 2028 converts to valid Kirkian date', g !== null && g.day >= 1);
+            assert(group + ': Feb 29 2028 is in year 2 AK', g.year, 2);
+
+            // Leap-year boundaries: iQuarters 41 = Sep 8 2028, iQuarters 42 = Sep 9 2028
+            g = C.gregorianToKirkian(2028, 9, 8);
+            assert(group + ': Sep 8 2028 = 2 AK iQuarters 41', [g.year, g.month, g.day], [2, 9, 41]);
+            g = C.gregorianToKirkian(2028, 9, 9);
+            assert(group + ': Sep 9 2028 = 2 AK iQuarters 42 (leap day)', [g.year, g.month, g.day], [2, 9, 42]);
+
+            // 0 AK (Sep 10 2025 - Sep 9 2026) has no leap day, should be 365
+            days = C.getDaysInKirkianYear(0);
+            assert(group + ': 0 AK has 365 days', days, 365);
+        })();
+
+        // Reverse conversion tests
+        (function() {
+            var group = 'Reverse Conversion';
+
+            var g = C.kirkianToGregorian(0, 0, 1);
+            assert(group + ': 0 AK Kirkfall 1 = Sep 10 2025', [g.year, g.month, g.day], [2025, 9, 10]);
+
+            g = C.kirkianToGregorian(1, 0, 1);
+            assert(group + ': 1 AK Kirkfall 1 = Sep 10 2026', [g.year, g.month, g.day], [2026, 9, 10]);
+
+            g = C.kirkianToGregorian(3, 0, 1);
+            assert(group + ': 3 AK Kirkfall 1 = Sep 10 2028', [g.year, g.month, g.day], [2028, 9, 10]);
+
+            g = C.kirkianToGregorian(0, 9, 41);
+            assert(group + ': 0 AK iQuarters 41 = Sep 9 2026', [g.year, g.month, g.day], [2026, 9, 9]);
+
+            g = C.kirkianToGregorian(2, 9, 41);
+            assert(group + ': 2 AK iQuarters 41 = Sep 8 2028', [g.year, g.month, g.day], [2028, 9, 8]);
+
+            g = C.kirkianToGregorian(2, 9, 42);
+            assert(group + ': 2 AK iQuarters 42 = Sep 9 2028', [g.year, g.month, g.day], [2028, 9, 9]);
+
+            g = C.kirkianToGregorian(2, 3, 1);
+            assert(group + ': 2 AK Kirkember 1 = Dec 27 2027', [g.year, g.month, g.day], [2027, 12, 27]);
+        })();
+
+        // Round-trip tests
+        (function() {
+            var group = 'Round-trip';
+
+            var dates = [
+                [2025, 9, 10], [2025, 12, 25], [2026, 1, 1], [2026, 2, 28],
+                [2026, 9, 9], [2026, 9, 10], [2027, 3, 15], [2028, 2, 29],
+                [2028, 9, 8], [2028, 9, 9], [2028, 9, 10], [2030, 6, 15],
+                [2032, 2, 29], [2100, 12, 31], [2000, 3, 1]
+            ];
+
+            dates.forEach(function(d) {
+                var k = C.gregorianToKirkian(d[0], d[1], d[2]);
+                var back = C.kirkianToGregorian(k.year, k.month, k.day);
+                assert(group + ': Round-trip ' + d.join('-'), [back.year, back.month, back.day], d);
+            });
+        })();
+
+        // Day of week tests
+        (function() {
+            var group = 'Day of Week';
+
+            // Sep 10 2025 should be Wednesday
+            assert(group + ': Sep 10 2025 day of week', C.getDayOfWeekName(2025, 9, 10), 'Wednesday');
+
+            // Sep 9 2026 should be Wednesday
+            assert(group + ': Sep 9 2026 day of week', C.getDayOfWeekName(2026, 9, 9), 'Wednesday');
+
+            // Dec 25 2025 should be Thursday
+            assert(group + ': Dec 25 2025 day of week', C.getDayOfWeekName(2025, 12, 25), 'Thursday');
+        })();
+
+        // Month grid tests
+        (function() {
+            var group = 'Month Grid';
+
+            // Kirkfall 0 AK starts on Wednesday, so first column is empty
+            var grid = C.generateMonthGrid(0, 0);
+            assert(group + ': Kirkfall 0 AK first cell is empty (starts on Wed)', grid[0][0] === null, true);
+            assert(group + ': Kirkfall 0 AK third cell is day 1', grid[0][3].kDay, 1);
+
+            // Count all days in every month of year 0 AK
+            for (var m = 0; m < 10; m++) {
+                var g = C.generateMonthGrid(0, m);
+                var count = 0;
+                g.forEach(function(week) {
+                    week.forEach(function(cell) {
+                        if (cell !== null) count++;
+                    });
+                });
+                assert(group + ': Month ' + C.MONTH_NAMES[m] + ' has ' + C.MONTH_DAYS[m] + ' days', count, C.MONTH_DAYS[m]);
+            }
+
+            // Leap year 2 AK: iQuarters has 42 days
+            var g2 = C.generateMonthGrid(2, 9);
+            var count2 = 0;
+            g2.forEach(function(week) {
+                week.forEach(function(cell) {
+                    if (cell !== null) count2++;
+                });
+            });
+            assert(group + ': iQuarters 2 AK (leap) has 42 days', count2, 42);
+
+            // Grid uses a consistent 7-day week
+            var g3 = C.generateMonthGrid(1, 4);
+            var weekLengths = g3.map(function(week) { return week.length; });
+            assert(group + ': Every week row has 7 columns', weekLengths.every(function(l) { return l === 7; }), true);
+        })();
+
+        // Event tests
+        (function() {
+            var group = 'Events';
+
+            var events = KirkianEvents.getEventsForGregorianDate(9, 10);
+            assertBool(group + ': Sep 10 has events (New Year)', events.length > 0);
+
+            var hasNewYear = events.some(function(e) { return e.name === 'Kirkian New Year'; });
+            assertBool(group + ': Sep 10 includes Kirkian New Year', hasNewYear);
+
+            events = KirkianEvents.getEventsForGregorianDate(12, 25);
+            hasNewYear = events.some(function(e) { return e.name === 'Kirkmas'; });
+            assertBool(group + ': Dec 25 includes Kirkmas', hasNewYear);
+
+            var results = KirkianEvents.searchEvents('Kirkian');
+            assertBool(group + ': Search "Kirkian" finds results', results.length > 0);
+        })();
+
+        // Formatting tests
+        (function() {
+            var group = 'Formatting';
+
+            assert(group + ': formatGregorianDate', C.formatGregorianDate(2025, 9, 10), 'September 10, 2025');
+            assert(group + ': formatKirkianDate', C.formatKirkianDate(1, 0, 1), '1 AK \u00B7 Kirkfall 1');
+            assert(group + ': MONTH_NAMES length', C.MONTH_NAMES.length, 10);
+            assert(group + ': MONTH_DAYS sum', C.MONTH_DAYS.reduce(function(a,b){return a+b;}, 0), 365);
+        })();
+
+        // Parse tests
+        (function() {
+            var group = 'Parsing';
+
+            var d = C.parseGregorianDate('September 10, 2026');
+            assert(group + ': Parse "September 10, 2026"', d ? [d.year, d.month, d.day] : null, [2026, 9, 10]);
+
+            d = C.parseGregorianDate('12/25/2025');
+            assert(group + ': Parse "12/25/2025"', d ? [d.year, d.month, d.day] : null, [2025, 12, 25]);
+
+            d = C.parseGregorianDate('2028-02-29');
+            assert(group + ': Parse "2028-02-29"', d ? [d.year, d.month, d.day] : null, [2028, 2, 29]);
+
+            d = C.parseKirkianDate('1 AK Kirkfall 1');
+            assert(group + ': Parse "1 AK Kirkfall 1"', d ? [d.year, d.month, d.day] : null, [1, 0, 1]);
+
+            d = C.parseKirkianDate('0 AK iQuarters 41');
+            assert(group + ': Parse "0 AK iQuarters 41"', d ? [d.year, d.month, d.day] : null, [0, 9, 41]);
+
+            d = C.parseKirkianDate('2 AK iQuarters 42');
+            assert(group + ': Parse "2 AK iQuarters 42" (leap year)', d ? [d.year, d.month, d.day] : null, [2, 9, 42]);
+
+            d = C.parseKirkianDate('2 AK iQuarters 43');
+            assert(group + ': Parse "2 AK iQuarters 43" invalid (42 max)', d, null);
+
+            d = C.parseKirkianDate('1 AK Kirkfall');
+            assert(group + ': Parse "1 AK Kirkfall" (day defaults to 1)', d ? [d.year, d.month, d.day] : null, [1, 0, 1]);
+        })();
+
+        // Display
+        var el = document.getElementById('results');
+        var html = '';
+        var currentGroup = '';
+
+        results.forEach(function(r) {
+            var groupMatch = r.desc.match(/^([^:]+):/);
+            var groupName = groupMatch ? groupMatch[1] : '';
+            if (groupName !== currentGroup) {
+                if (currentGroup) html += '</div>';
+                currentGroup = groupName;
+                html += '<div class="test-group"><h2>' + groupName + '</h2>';
+            }
+            var cls = r.pass ? 'pass' : 'fail';
+            var sym = r.pass ? '\u2713' : '\u2717';
+            var detail = r.pass ? '' : ' (got: ' + JSON.stringify(r.actual) + ', expected: ' + JSON.stringify(r.expected) + ')';
+            html += '<div class="test ' + cls + '">' + sym + ' ' + r.desc.replace(/^[^:]+:\s*/, '') + detail + '</div>';
+        });
+
+        if (currentGroup) html += '</div>';
+
+        var summaryCls = failed === 0 ? 'all-pass' : 'has-fail';
+        var summaryText = failed === 0
+            ? '\u2713 All ' + total + ' tests passed!'
+            : '\u2717 ' + failed + ' of ' + total + ' tests failed';
+
+        html += '<div class="summary ' + summaryCls + '">' + summaryText + '</div>';
+        el.innerHTML = html;
+
+        console.log('Tests: ' + total + ', Passed: ' + passed + ', Failed: ' + failed);
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirkian Calendar</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="#calendar" class="logo">
+                <span class="logo-icon">📅</span>
+                <span class="logo-text">Kirkian Calendar</span>
+            </a>
+            <nav class="main-nav">
+                <a href="#calendar" class="nav-link active" data-page="calendar">Calendar</a>
+                <a href="#converter" class="nav-link" data-page="converter">Converter</a>
+                <a href="#search" class="nav-link" data-page="search">Search</a>
+                <a href="#about" class="nav-link" data-page="about">About</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Calendar Page -->
+        <section id="page-calendar" class="page active">
+            <div class="today-banner">
+                <div class="today-label">Today</div>
+                <div id="today-summary"></div>
+            </div>
+
+            <div class="calendar-container">
+                <div id="month-header"></div>
+                <div id="calendar-grid"></div>
+            </div>
+
+            <aside class="sidebar">
+                <div id="upcoming-events"></div>
+            </aside>
+        </section>
+
+        <!-- Converter Page -->
+        <section id="page-converter" class="page">
+            <div class="converter-container">
+                <h2>Date Converter</h2>
+                <p class="converter-subtitle">Convert between Gregorian and Kirkian dates</p>
+
+                <div class="converter-grid">
+                    <div class="converter-card">
+                        <h3>Gregorian → Kirkian</h3>
+                        <div class="converter-input-group">
+                            <label for="converter-greg-input">Enter a Gregorian date</label>
+                            <input type="text" id="converter-greg-input" placeholder="e.g. September 10, 2026" autocomplete="off">
+                            <small class="input-hint">Format: Month Day, Year (e.g. September 10, 2026)</small>
+                        </div>
+                        <div class="converter-result">
+                            <span class="result-arrow">→</span>
+                            <span id="converter-greg-result" class="result-value"></span>
+                        </div>
+                    </div>
+
+                    <div class="converter-card">
+                        <h3>Kirkian → Gregorian</h3>
+                        <div class="converter-input-group kirkian-inputs">
+                            <label>Kirkian Date</label>
+                            <div class="kirkian-fields">
+                                <input type="number" id="converter-k-year" placeholder="Year" min="0" class="kirkian-field">
+                                <span class="field-label">AK</span>
+                                <select id="converter-k-month" class="kirkian-field">
+                                    <option value="1">Kirkfall</option>
+                                    <option value="2">Kirktember</option>
+                                    <option value="3">Kirkvember</option>
+                                    <option value="4">Kirkember</option>
+                                    <option value="5">July</option>
+                                    <option value="6">Kirkian</option>
+                                    <option value="7">Kirkward</option>
+                                    <option value="8">Kirkday</option>
+                                    <option value="9">Kirkstar</option>
+                                    <option value="10">iQuarters</option>
+                                </select>
+                                <input type="number" id="converter-k-day" placeholder="Day" min="1" max="41" class="kirkian-field">
+                            </div>
+                        </div>
+                        <div class="converter-result">
+                            <span class="result-arrow">→</span>
+                            <span id="converter-kirk-result" class="result-value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Page -->
+        <section id="page-search" class="page">
+            <div class="search-container">
+                <h2>Search Dates & Events</h2>
+                <p class="search-subtitle">Search for Gregorian dates, Kirkian dates, or events</p>
+
+                <div class="search-input-wrapper">
+                    <input type="text" id="global-search" placeholder="Search dates or events..." autocomplete="off">
+                </div>
+
+                <div class="search-examples">
+                    <span class="example-label">Try:</span>
+                    <button class="example-search" data-query="September 10, 2026">September 10, 2026</button>
+                    <button class="example-search" data-query="1 AK Kirkfall 1">1 AK Kirkfall 1</button>
+                    <button class="example-search" data-query="Kirkian New Year">Kirkian New Year</button>
+                    <button class="example-search" data-query="holiday">holiday</button>
+                </div>
+
+                <div id="search-results"></div>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="page-about" class="page">
+            <div class="about-container">
+                <h2>The Kirkian Calendar</h2>
+
+                <div class="about-section">
+                    <h3>What is the Kirkian Calendar?</h3>
+                    <p>The Kirkian Calendar is an alternative calendar system that begins on <strong>September 10, 2025</strong>. This date marks the beginning of the calendar, designated as year <strong>0 AK</strong> (After Kirk). The Kirkian Calendar provides a unique way to track time with its own months, years, and traditions.</p>
+                </div>
+
+                <div class="about-section">
+                    <h3>Year Numbering</h3>
+                    <p>The Kirkian Calendar uses year numbering that starts from the epoch date. The abbreviation <strong>AK</strong> stands for <strong>After Kirk</strong>.</p>
+                    <ul>
+                        <li>September 10, 2025 = <strong>0 AK</strong>, Kirkfall 1</li>
+                        <li>September 10, 2026 = <strong>1 AK</strong>, Kirkfall 1</li>
+                        <li>September 10, 2027 = <strong>2 AK</strong>, Kirkfall 1</li>
+                        <li>September 10, 2028 = <strong>3 AK</strong>, Kirkfall 1</li>
+                    </ul>
+                    <p>Each Kirkian year runs from <strong>September 10</strong> through <strong>September 9</strong> of the following Gregorian year.</p>
+                </div>
+
+                <div class="about-section">
+                    <h3>The 10 Months</h3>
+                    <p>The Kirkian year contains exactly <strong>10 months</strong>. It has <strong>365 days</strong> in normal years and <strong>366 days</strong> in leap years, with no separate year-end days.</p>
+
+                    <table class="month-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Month Name</th>
+                                <th>Days</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Kirkfall</td><td>36</td><td>First month of the year</td></tr>
+                            <tr><td>2</td><td>Kirktember</td><td>36</td><td></td></tr>
+                            <tr><td>3</td><td>Kirkvember</td><td>36</td><td></td></tr>
+                            <tr><td>4</td><td>Kirkember</td><td>36</td><td></td></tr>
+                            <tr><td>5</td><td>July</td><td>36</td><td></td></tr>
+                            <tr><td>6</td><td>Kirkian</td><td>36</td><td></td></tr>
+                            <tr><td>7</td><td>Kirkward</td><td>36</td><td></td></tr>
+                            <tr><td>8</td><td>Kirkday</td><td>36</td><td></td></tr>
+                            <tr><td>9</td><td>Kirkstar</td><td>36</td><td></td></tr>
+                            <tr><td>10</td><td>iQuarters</td><td>41</td><td>Final month, longest of the year. Becomes 42 days in leap years.</td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2"><strong>Total</strong></td>
+                                <td><strong>365</strong></td>
+                                <td>9 × 36 + 41</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="about-section">
+                    <h3>How Gregorian Dates Correspond</h3>
+                    <p>The Kirkian Calendar is anchored to the Gregorian Calendar. The first day of each Kirkian year (Kirkfall 1) always falls on <strong>September 10</strong> in the Gregorian Calendar. Because the Kirkian year has 365 days (or 366 in leap years), the correspondence between Kirkian and Gregorian dates shifts slightly each year.</p>
+                    <p>The conversion is mathematically exact — it counts the total number of days between any date and the epoch (September 10, 2025) and uses that to determine the correct Kirkian year, month, and day.</p>
+                </div>
+
+                <div class="about-section">
+                    <h3>Key Dates</h3>
+                    <ul>
+                        <li><strong>Kirkian New Year</strong> — September 10 (Kirkfall 1)</li>
+                        <li><strong>Founding Day</strong> — September 10 (anniversary of the calendar)</li>
+                        <li><strong>Last Day of iQuarters</strong> — September 9 (final day of the Kirkian year)</li>
+                    </ul>
+                </div>
+
+                <div class="about-section">
+                    <h3>Leap Years</h3>
+                    <p>The Kirkian Calendar does not have its own leap year system. Instead, it follows the Gregorian Calendar's leap year rules, so the year anchors stay aligned: every Kirkian year begins on <strong>September 10</strong> of the corresponding Gregorian year.</p>
+                    <p>When the Gregorian Calendar includes a <strong>February 29</strong>, the Kirkian year containing that date has <strong>366 days</strong> instead of 365. Because there are no separate year-end days, the extra (leap) day extends the final month, <strong>iQuarters</strong>, from 41 days to <strong>42 days</strong> in leap years. Months 1–9 always have exactly 36 days.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Date Details Modal -->
+    <div id="date-modal" class="modal-overlay">
+        <div id="modal-content" class="modal-content"></div>
+    </div>
+
+    <footer class="site-footer">
+        <p>Kirkian Calendar &middot; An alternative date system beginning September 10, 2025</p>
+    </footer>
+
+    <script src="js/calendar.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
