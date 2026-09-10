@@ -252,8 +252,8 @@
             assertBool(group + ': Sep 10 includes Kirkian New Year', hasNewYear);
 
             events = KirkianEvents.getEventsForGregorianDate(12, 25);
-            hasNewYear = events.some(function(e) { return e.name === 'Kirkmas'; });
-            assertBool(group + ': Dec 25 includes Kirkmas', hasNewYear);
+            hasNewYear = events.some(function(e) { return e.name === 'Christmas'; });
+            assertBool(group + ': Dec 25 includes Christmas', hasNewYear);
 
             var results = KirkianEvents.searchEvents('Kirkian');
             assertBool(group + ': Search "Kirkian" finds results', results.length > 0);

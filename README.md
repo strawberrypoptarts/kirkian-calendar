@@ -43,7 +43,7 @@ All events live in `js/events.js` inside the `events` array. Each event supports
 
 ```js
 {
-    name: 'Kirkmas',                 // Event name
+    name: 'Christmas',               // Event name
     gregorianMonth: 12,              // Month (1-12)
     gregorianDay: 25,                // Day of month
     description: 'A holiday...',     // Description

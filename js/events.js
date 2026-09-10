@@ -12,102 +12,12 @@ var KirkianEvents = (function() {
             recurring: true
         },
         {
-            name: 'Kirkfall Fest',
-            gregorianMonth: 10,
-            gregorianDay: 16,
-            description: 'Celebration marking the end of Kirkfall, the first month of the Kirkian year.',
-            category: 'festival',
-            emoji: '\uD83C\uDF3F',
-            recurring: true
-        },
-        {
-            name: 'Kirkvember Night',
-            gregorianMonth: 12,
-            gregorianDay: 11,
-            description: 'A night of celebration during Kirkvember, featuring feasts and gatherings.',
-            category: 'festival',
-            emoji: '\uD83C\uDF19',
-            recurring: true
-        },
-        {
-            name: 'Kirkmas',
+            name: 'Christmas',
             gregorianMonth: 12,
             gregorianDay: 25,
-            description: 'A day of gift-giving and togetherness during the Kirkian winter.',
+            description: 'A day of gift-giving and togetherness, held on December 25.',
             category: 'holiday',
             emoji: '\uD83C\uDF84',
-            recurring: true
-        },
-        {
-            name: 'Mid-Kirkian',
-            gregorianMonth: 1,
-            gregorianDay: 14,
-            description: 'The midpoint of the Kirkian year, celebrated with reflection and celebration.',
-            category: 'holiday',
-            emoji: '\uD83C\uDF1F',
-            recurring: true
-        },
-        {
-            name: 'Kirkian Independence Day',
-            gregorianMonth: 4,
-            gregorianDay: 14,
-            description: 'Commemorating the independence and self-determination of the Kirkian system.',
-            category: 'holiday',
-            emoji: '\uD83C\uDFD3\uFE0F',
-            recurring: true
-        },
-        {
-            name: 'Kirkstar Rising',
-            gregorianMonth: 7,
-            gregorianDay: 11,
-            description: 'The beginning of Kirkstar month, celebrating the stars and sky.',
-            category: 'festival',
-            emoji: '\u2B50',
-            recurring: true
-        },
-        {
-            name: 'iQuarters Eve',
-            gregorianMonth: 8,
-            gregorianDay: 10,
-            description: 'The eve of the final and longest month of the Kirkian year.',
-            category: 'festival',
-            emoji: '\uD83C\uDF06',
-            recurring: true
-        },
-        {
-            name: 'Last Day of iQuarters',
-            gregorianMonth: 9,
-            gregorianDay: 9,
-            description: 'The final day of the Kirkian year. A time for reflection before the new year.',
-            category: 'holiday',
-            emoji: '\uD83C\uDF19',
-            recurring: true
-        },
-        {
-            name: 'Winter Kirkian Solstice',
-            gregorianMonth: 12,
-            gregorianDay: 21,
-            description: 'The shortest day of the Gregorian year, observed during the Kirkian month of Kirkvember.',
-            category: 'observance',
-            emoji: '\u2744\uFE0F',
-            recurring: true
-        },
-        {
-            name: 'Spring Awakening',
-            gregorianMonth: 3,
-            gregorianDay: 20,
-            description: 'The first day of spring in the Gregorian calendar, falling during Kirkember.',
-            category: 'observance',
-            emoji: '\uD83C\uDF31',
-            recurring: true
-        },
-        {
-            name: 'Summer Kirkian Feast',
-            gregorianMonth: 6,
-            gregorianDay: 21,
-            description: 'The summer solstice feast, celebrated during the Kirkian month of Kirkian.',
-            category: 'festival',
-            emoji: '\u2600\uFE0F',
             recurring: true
         }
     ];
