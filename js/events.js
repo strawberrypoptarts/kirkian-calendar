@@ -19,6 +19,15 @@ var KirkianEvents = (function() {
             category: 'holiday',
             emoji: '\uD83C\uDF84',
             recurring: true
+        },
+        {
+            name: 'Halloween',
+            gregorianMonth: 10,
+            gregorianDay: 31,
+            description: 'A spooky celebration with costumes and treats on October 31.',
+            category: 'festival',
+            emoji: '\uD83C\uDF83',
+            recurring: true
         }
     ];
 
