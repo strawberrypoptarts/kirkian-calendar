@@ -21,15 +21,6 @@ var KirkianEvents = (function() {
             recurring: true
         },
         {
-            name: 'Founding Day',
-            gregorianMonth: 9,
-            gregorianDay: 10,
-            description: 'Anniversary of the creation of the Kirkian Calendar system.',
-            category: 'holiday',
-            emoji: '\u2B50',
-            recurring: true
-        },
-        {
             name: 'Kirkvember Night',
             gregorianMonth: 12,
             gregorianDay: 11,
@@ -90,15 +81,6 @@ var KirkianEvents = (function() {
             description: 'The final day of the Kirkian year. A time for reflection before the new year.',
             category: 'holiday',
             emoji: '\uD83C\uDF19',
-            recurring: true
-        },
-        {
-            name: 'Kirkian Anniversary',
-            gregorianMonth: 9,
-            gregorianDay: 10,
-            description: 'Annual celebration of the Kirkian Calendar itself.',
-            category: 'holiday',
-            emoji: '\uD83C\uDF82',
             recurring: true
         },
         {
