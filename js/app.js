@@ -121,6 +121,8 @@ var KirkianApp = (function() {
             '  </div>' +
             '  <button class="nav-arrow" id="next-month" title="Next Month">\u203A</button>' +
             '  <button class="nav-arrow" id="next-year" title="Next Year">\u00BB</button>' +
+            '  <span class="nav-separator"></span>' +
+            '  <button class="nav-today" id="today-button" title="Go to today">Today</button>' +
             '</div>' +
             '<div class="month-info">' +
             '  <span>' + C.getDaysInKirkianMonth(currentKYear, currentKMonth) + ' days</span>' +
@@ -151,6 +153,12 @@ var KirkianApp = (function() {
         });
         document.getElementById('next-year').addEventListener('click', function() {
             currentKYear++;
+            renderCalendar();
+        });
+        document.getElementById('today-button').addEventListener('click', function() {
+            var today = C.getTodayKirkian();
+            currentKYear = today.year;
+            currentKMonth = today.month;
             renderCalendar();
         });
     }
@@ -371,6 +379,17 @@ var KirkianApp = (function() {
                 if (query) performSearch(query);
             }
         });
+
+        var exampleButtons = document.querySelectorAll('.example-search');
+        exampleButtons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var query = this.getAttribute('data-query');
+                if (searchInput) {
+                    searchInput.value = query;
+                    performSearch(query);
+                }
+            });
+        });
     }
 
     function performSearch(query) {
@@ -488,6 +507,15 @@ var KirkianApp = (function() {
             var m = parseInt(kMonthInput.value, 10) - 1;
             var d = parseInt(kDayInput.value, 10);
 
+            if (!isNaN(m) && m >= 0 && m <= 9 && !isNaN(y)) {
+                var maxDay = C.getDaysInKirkianMonth(y, m);
+                kDayInput.max = maxDay;
+                if (!isNaN(d) && d > maxDay) {
+                    d = maxDay;
+                    kDayInput.value = maxDay;
+                }
+            }
+
             if (isNaN(y) || isNaN(m) || isNaN(d) || m < 0 || m > 9 ||
                 d < 1 || d > C.getDaysInKirkianMonth(y, m)) {
                 kirkResult.textContent = '';
@@ -521,22 +549,7 @@ var KirkianApp = (function() {
             kYearInput.value = todayK.year;
             kMonthInput.value = todayK.month + 1;
             kDayInput.value = todayK.day;
-            kDayInput.max = C.getDaysInKirkianMonth(todayK.year, todayK.month);
             kMonthInput.dispatchEvent(new Event('change'));
-        }
-
-        if (kMonthInput) {
-            kMonthInput.addEventListener('change', function() {
-                var y = parseInt(kYearInput.value, 10);
-                var m = parseInt(this.value, 10) - 1;
-                if (m >= 0 && m <= 9) {
-                    var maxDay = C.getDaysInKirkianMonth(y, m);
-                    kDayInput.max = maxDay;
-                    if (parseInt(kDayInput.value, 10) > maxDay) {
-                        kDayInput.value = maxDay;
-                    }
-                }
-            });
         }
     }
 

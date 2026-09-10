@@ -213,6 +213,7 @@ body {
     justify-content: center;
     gap: 0.5rem;
     margin-bottom: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .nav-arrow {
@@ -231,6 +232,31 @@ body {
     background: var(--accent-bg);
     border-color: var(--accent);
     color: var(--accent);
+}
+
+.nav-separator {
+    width: 1px;
+    height: 1.5rem;
+    background: var(--border);
+    margin: 0 0.25rem;
+}
+
+.nav-today {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-bg-hover);
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--accent);
+    transition: all var(--transition);
+    line-height: 1;
+}
+
+.nav-today:hover {
+    background: var(--accent-bg-hover);
+    border-color: var(--accent);
 }
 
 .month-title {
