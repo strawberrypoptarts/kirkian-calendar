@@ -272,6 +272,14 @@ body {
     color: var(--accent);
 }
 
+.month-index {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+}
+
 .month-year {
     font-size: 0.85rem;
     color: var(--text-secondary);

@@ -109,13 +109,14 @@ var KirkianApp = (function() {
         var el = document.getElementById('month-header');
         if (!el) return;
 
-        var yearStart = C.getKirkianYearStartGregorian(currentKYear);
+        var monthStart = C.kirkianToGregorian(currentKYear, currentKMonth, 1);
 
         el.innerHTML =
             '<div class="month-nav">' +
             '  <button class="nav-arrow" id="prev-year" title="Previous Year">\u00AB</button>' +
             '  <button class="nav-arrow" id="prev-month" title="Previous Month">\u2039</button>' +
             '  <div class="month-title">' +
+            '    <span class="month-index">Month ' + (currentKMonth + 1) + ' of 10</span>' +
             '    <span class="month-name">' + C.MONTH_NAMES[currentKMonth] + '</span>' +
             '    <span class="month-year">' + currentKYear + ' AK</span>' +
             '  </div>' +
@@ -127,7 +128,7 @@ var KirkianApp = (function() {
             '<div class="month-info">' +
             '  <span>' + C.getDaysInKirkianMonth(currentKYear, currentKMonth) + ' days</span>' +
             '  <span class="separator">\u00B7</span>' +
-            '  <span>' + C.formatGregorianDate(yearStart.year, yearStart.month, yearStart.day) + ' \u2013 ' +
+            '  <span>' + C.formatGregorianDate(monthStart.year, monthStart.month, monthStart.day) + ' \u2013 ' +
             getKirkianMonthEndFormatted(currentKYear, currentKMonth) + '</span>' +
             '</div>';
 
